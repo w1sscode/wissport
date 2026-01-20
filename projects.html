@@ -1,0 +1,719 @@
+
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Projects - CyberDev Portfolio</title>
+    
+    <!-- Core Libraries -->
+    <script src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://s4.zstatic.net/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <script src="https://s4.zstatic.net/ajax/libs/echarts/5.4.0/echarts.min.js"></script>
+    <script src="https://s4.zstatic.net/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <link rel="stylesheet" href="https://s4.zstatic.net/npm/splitting@1.0.6/dist/splitting.css"/>
+    <script src="https://s4.zstatic.net/npm/splitting@1.0.6/dist/splitting.min.js"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.loli.net/css2?family=Orbitron:wght@400;700;900&amp;family=Rajdhani:wght@300;400;500;600;700&amp;family=Fira+Code:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cyber-yellow': '#F8E602',
+                        'cyber-cyan': '#00F0FF',
+                        'cyber-purple': '#772289',
+                        'cyber-orange': '#FF9A00',
+                        'cyber-pink': '#FF007A',
+                        'cyber-green': '#4BFF21',
+                        'cyber-white': '#F4D5FD',
+                        'cyber-black': '#0A0A0A',
+                        'cyber-gray': '#2C2C2E'
+                    },
+                    fontFamily: {
+                        'orbitron': ['Orbitron', 'sans-serif'],
+                        'rajdhani': ['Rajdhani', 'sans-serif'],
+                        'firacode': ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .cyber-bg {
+            background: linear-gradient(45deg, #0A0A0A 0%, #2C2C2E 50%, #0A0A0A 100%);
+            position: relative;
+        }
+        
+        .cyber-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://static1.cbrimages.com/wordpress/wp-content/uploads/2022/10/Cyberpunk-Edgerunners-David-on-top-of-Arasaka-Tower-Ghost-in-the-Shell-Rooftop-Drop.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor;
+        }
+        
+        .cyber-card {
+            background: rgba(44, 44, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(248, 230, 2, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .cyber-card:hover {
+            border-color: rgba(248, 230, 2, 0.8);
+            box-shadow: 0 0 20px rgba(248, 230, 2, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .cyber-btn {
+            background: linear-gradient(45deg, #F8E602, #00F0FF);
+            color: #0A0A0A;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cyber-btn:hover {
+            box-shadow: 0 0 30px rgba(248, 230, 2, 0.6);
+            transform: scale(1.05);
+        }
+        
+        .filter-btn {
+            background: rgba(44, 44, 46, 0.8);
+            border: 1px solid rgba(248, 230, 2, 0.3);
+            color: #F4D5FD;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: linear-gradient(45deg, #F8E602, #00F0FF);
+            color: #0A0A0A;
+            border-color: #F8E602;
+        }
+        
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .project-item {
+            opacity: 1;
+            transform: scale(1);
+            transition: all 0.5s ease;
+        }
+        
+        .project-item.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+            height: 0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .project-item:not(.hidden) {
+            display: block;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .search-input {
+            background: rgba(44, 44, 46, 0.8);
+            border: 1px solid rgba(248, 230, 2, 0.3);
+            color: #F4D5FD;
+        }
+        
+        .search-input:focus {
+            border-color: #F8E602;
+            box-shadow: 0 0 10px rgba(248, 230, 2, 0.3);
+            outline: none;
+        }
+    </style>
+<script src="" defer=""></script></head>
+<body class="cyber-bg text-cyber-white font-rajdhani">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-cyber-black/80 backdrop-blur-md border-b border-cyber-yellow/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="">
+                        <span class="text-cyber-black font-bold text-sm"></span>
+                    </div>
+                    <span class="font-orbitron font-bold text-xl neon-text text-cyber-yellow"></span>
+                </div>
+                
+                <div class=" md:flex space-x-8">
+                    <a href="index.html" class="text-cyber-white hover:text-cyber-yellow transition-colors duration-300">Home</a>
+                    <a href="projects.html" class="text-cyber-yellow font-semibold border-b-2 border-cyber-yellow pb-1">Projects</a>
+                    <a href="about.html" class="text-cyber-white hover:text-cyber-yellow transition-colors duration-300">About</a>
+                    <a href="contact.html" class="text-cyber-white hover:text-cyber-yellow transition-colors duration-300">Contact</a>
+                </div>
+                
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-cyber-yellow">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden bg-cyber-black/95 backdrop-blur-md">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 text-cyber-white hover:text-cyber-yellow transition-colors duration-300">Home</a>
+                <a href="projects.html" class="block px-3 py-2 text-cyber-yellow font-semibold">Projects</a>
+                <a href="about.html" class="block px-3 py-2 text-cyber-white hover:text-cyber-yellow transition-colors duration-300">About</a>
+                <a href="contact.html" class="block px-3 py-2 text-cyber-white hover:text-cyber-yellow transition-colors duration-300">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <section class="pt-24 pb-12 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h1 class="font-orbitron font-black text-4xl md:text-6xl mb-6 neon-text text-cyber-yellow">
+                    PROJECT GALLERY
+                </h1>
+                <div class="w-24 h-1 bg-gradient-to-r from-cyber-yellow to-cyber-cyan mx-auto mb-6"></div>
+                <p class="text-xl max-w-3xl mx-auto">
+                    Explore my comprehensive collection of game development projects, from cyberpunk adventures to cutting-edge simulations
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter and Search Section -->
+    <section class="pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row gap-6 items-center justify-between mb-8">
+                <!-- Search Bar -->
+                <div class="relative flex-1 max-w-md">
+                    <input type="text" id="project-search" placeholder="Search projects..." class="search-input w-full px-4 py-3 rounded-lg pl-12"/>
+                    <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-cyber-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Grid -->
+    <section class="pb-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="project-grid" id="projects-container">
+                
+                <!-- Project 1: Neon Racer -->
+                <div class="project-item cyber-card rounded-xl overflow-hidden" data-category="unity" data-name="neon racer">
+                    <div class="aspect-video bg-gradient-to-br from-cyber-purple to-cyber-cyan relative overflow-hidden">
+                        <img src="https://cdn.discordapp.com/attachments/1415503480101273722/1423906152831389696/image.png?ex=696a76b1&is=69692531&hm=00d39b1d4b52ee97b97d8bd0e23cfe79cbe199616c6c956cdd2d2bf5a1016277&" alt="Neon Racer Game" class="w-full h-full object-cover"/>
+                        <div class="absolute inset-0 bg-cyber-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <button class="cyber-btn px-6 py-3 rounded-lg">info restricted</button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-orbitron font-bold text-xl mb-2 text-cyber-yellow">NEON RACER</h3>
+                        <p class="text-gray-300 mb-4">High-speed cyberpunk racing game with neon-lit tracks and futuristic vehicles</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-cyber-cyan/20 text-cyber-cyan px-3 py-1 rounded-full text-sm font-medium">Unity</span>
+                            <span class="bg-cyber-yellow/20 text-cyber-yellow px-3 py-1 rounded-full text-sm font-medium">C#</span>
+                            <span class="bg-cyber-purple/20 text-cyber-purple px-3 py-1 rounded-full text-sm font-medium">HDRP</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">2024</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: CyberGlitch -->
+                <div class="project-item cyber-card rounded-xl overflow-hidden" data-category="unreal" data-name="cyber glitch">
+                    <div class="aspect-video bg-gradient-to-br from-cyber-pink to-cyber-orange relative overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/interfaceingame.com/616199361eb3785ceb7653750d7c25d8a4e2844d.png" alt="CyberGlitch Interface" class="w-full h-full object-cover"/>
+                        <div class="absolute inset-0 bg-cyber-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <button class="cyber-btn px-6 py-3 rounded-lg">VIEW CODE</button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-orbitron font-bold text-xl mb-2 text-cyber-yellow">CYBERGLITCH</h3>
+                        <p class="text-gray-300 mb-4">Hacking simulation game with glitch effects and cyberpunk UI design</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-cyber-pink/20 text-cyber-pink px-3 py-1 rounded-full text-sm font-medium">Unreal</span>
+                            <span class="bg-cyber-orange/20 text-cyber-orange px-3 py-1 rounded-full text-sm font-medium">Blueprint</span>
+                            <span class="bg-cyber-green/20 text-cyber-green px-3 py-1 rounded-full text-sm font-medium">UI/UX</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">2024</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3: Neural Nexus -->
+                <div class="project-item cyber-card rounded-xl overflow-hidden" data-category="godot" data-name="neural nexus">
+                    <div class="aspect-video bg-gradient-to-br from-cyber-green to-cyber-cyan relative overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/miro.medium.com/3be74b0b8e6efb85214a9c6cf4f8d86c9cfa4c9a" alt="Neural Nexus AI" class="w-full h-full object-cover"/>
+                        <div class="absolute inset-0 bg-cyber-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <button class="cyber-btn px-6 py-3 rounded-lg">EXPLORE AI</button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-orbitron font-bold text-xl mb-2 text-cyber-yellow">NEURAL NEXUS</h3>
+                        <p class="text-gray-300 mb-4">AI-powered puzzle game with neural network mechanics and machine learning</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-cyber-green/20 text-cyber-green px-3 py-1 rounded-full text-sm font-medium">Python</span>
+                            <span class="bg-cyber-cyan/20 text-cyber-cyan px-3 py-1 rounded-full text-sm font-medium">TensorFlow</span>
+                            <span class="bg-cyber-yellow/20 text-cyber-yellow px-3 py-1 rounded-full text-sm font-medium">Godot</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">2023</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4: Quantum Break -->
+                <div class="project-item cyber-card rounded-xl overflow-hidden" data-category="unity" data-name="quantum break">
+                    <div class="aspect-video bg-gradient-to-br from-cyber-orange to-cyber-pink relative overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/www.gamedesigning.org/915320703872bbb6e3f90a4a9fc522801cce052c.jpg" alt="Quantum Break 3D" class="w-full h-full object-cover"/>
+                        <div class="absolute inset-0 bg-cyber-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <button class="cyber-btn px-6 py-3 rounded-lg">EXPLORE 3D</button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-orbitron font-bold text-xl mb-2 text-cyber-yellow">QUANTUM BREAK</h3>
+                        <p class="text-gray-300 mb-4">3D action game with time manipulation mechanics and stunning visual effects</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-cyber-orange/20 text-cyber-orange px-3 py-1 rounded-full text-sm font-medium">Unity</span>
+                            <span class="bg-cyber-pink/20 text-cyber-pink px-3 py-1 rounded-full text-sm font-medium">3D Modeling</span>
+                            <span class="bg-cyber-cyan/20 text-cyber-cyan px-3 py-1 rounded-full text-sm font-medium">VFX</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">2023</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 5: Code Warrior -->
+                <div class="project-item cyber-card rounded-xl overflow-hidden" data-category="web" data-name="code warrior">
+                    <div class="aspect-video bg-gradient-to-br from-cyber-cyan to-cyber-purple relative overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/www.codeadvantage.org/8a5299d8cbf865f942cccbec1d0d155a84b19d96.jpg" alt="Code Warrior Programming" class="w-full h-full object-cover"/>
+                        <div class="absolute inset-0 bg-cyber-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <button class="cyber-btn px-6 py-3 rounded-lg">CODE NOW</button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-orbitron font-bold text-xl mb-2 text-cyber-yellow">CODE WARRIOR</h3>
+                        <p class="text-gray-300 mb-4">Educational coding game that teaches programming through gameplay</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-cyber-cyan/20 text-cyber-cyan px-3 py-1 rounded-full text-sm font-medium">JavaScript</span>
+                            <span class="bg-cyber-purple/20 text-cyber-purple px-3 py-1 rounded-full text-sm font-medium">HTML5</span>
+                            <span class="bg-cyber-yellow/20 text-cyber-yellow px-3 py-1 rounded-full text-sm font-medium">WebGL</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">2023</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 6: Virtual Reality Experience -->
+                <div class="project-item cyber-card rounded-xl overflow-hidden" data-category="unity" data-name="vr experience">
+                    <div class="aspect-video bg-gradient-to-br from-cyber-green to-cyber-yellow relative overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/www.uploadvr.com/b8584b78be871da5492eb437b21ef259ea4cb87b.jpg" alt="VR Experience" class="w-full h-full object-cover"/>
+                        <div class="absolute inset-0 bg-cyber-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <button class="cyber-btn px-6 py-3 rounded-lg">ENTER VR</button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-orbitron font-bold text-xl mb-2 text-cyber-yellow">VR EXPERIENCE</h3>
+                        <p class="text-gray-300 mb-4">Immersive virtual reality adventure set in a cyberpunk metropolis</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-cyber-green/20 text-cyber-green px-3 py-1 rounded-full text-sm font-medium">Unity XR</span>
+                            <span class="bg-cyber-yellow/20 text-cyber-yellow px-3 py-1 rounded-full text-sm font-medium">Oculus SDK</span>
+                            <span class="bg-cyber-cyan/20 text-cyber-cyan px-3 py-1 rounded-full text-sm font-medium">C#</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">2024</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 7: Mobile Cyberpunk -->
+                <div class="project-item cyber-card rounded-xl overflow-hidden" data-category="mobile" data-name="mobile cyberpunk">
+                    <div class="aspect-video bg-gradient-to-br from-cyber-pink to-cyber-cyan relative overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/dotnet.microsoft.com/103a8783971af052e1980cd377a250d8df3214d2.png" alt="Mobile Cyberpunk Game" class="w-full h-full object-cover"/>
+                        <div class="absolute inset-0 bg-cyber-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <button class="cyber-btn px-6 py-3 rounded-lg">PLAY NOW</button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-orbitron font-bold text-xl mb-2 text-cyber-yellow">MOBILE CYBERPUNK</h3>
+                        <p class="text-gray-300 mb-4">Mobile action RPG with cybernetic enhancements and tactical combat</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-cyber-pink/20 text-cyber-pink px-3 py-1 rounded-full text-sm font-medium">Unity Mobile</span>
+                            <span class="bg-cyber-cyan/20 text-cyber-cyan px-3 py-1 rounded-full text-sm font-medium">AR Foundation</span>
+                            <span class="bg-cyber-yellow/20 text-cyber-yellow px-3 py-1 rounded-full text-sm font-medium">C#</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">2023</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 8: Indie Platformer -->
+                <div class="project-item cyber-card rounded-xl overflow-hidden" data-category="unity" data-name="indie platformer">
+                    <div class="aspect-video bg-gradient-to-br from-cyber-yellow to-cyber-purple relative overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/media.geeksforgeeks.org/e3bcac3b9a10ddd56cf8df2abff3acea4f3410fe.png" alt="Indie Platformer" class="w-full h-full object-cover"/>
+                        <div class="absolute inset-0 bg-cyber-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <button class="cyber-btn px-6 py-3 rounded-lg">JUMP IN</button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-orbitron font-bold text-xl mb-2 text-cyber-yellow">INDIE PLATFORMER</h3>
+                        <p class="text-gray-300 mb-4">Retro-inspired platformer with modern mechanics and cyberpunk aesthetics</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-cyber-yellow/20 text-cyber-yellow px-3 py-1 rounded-full text-sm font-medium">Unity 2D</span>
+                            <span class="bg-cyber-purple/20 text-cyber-purple px-3 py-1 rounded-full text-sm font-medium">Pixel Art</span>
+                            <span class="bg-cyber-cyan/20 text-cyber-cyan px-3 py-1 rounded-full text-sm font-medium">C#</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">2023</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 9: Game Engine Interface -->
+                <div class="project-item cyber-card rounded-xl overflow-hidden" data-category="unreal" data-name="engine interface">
+                    <div class="aspect-video bg-gradient-to-br from-cyber-cyan to-cyber-orange relative overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/i.ytimg.com/a1455c5b73d13ac96fe5d31d5f1575bb5e8410fc.jpg" alt="Game Engine Interface" class="w-full h-full object-cover"/>
+                        <div class="absolute inset-0 bg-cyber-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <button class="cyber-btn px-6 py-3 rounded-lg">INTERFACE</button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-orbitron font-bold text-xl mb-2 text-cyber-yellow">ENGINE INTERFACE</h3>
+                        <p class="text-gray-300 mb-4">Custom game engine interface with advanced debugging and profiling tools</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-cyber-cyan/20 text-cyber-cyan px-3 py-1 rounded-full text-sm font-medium">Unreal Engine</span>
+                            <span class="bg-cyber-orange/20 text-cyber-orange px-3 py-1 rounded-full text-sm font-medium">C++</span>
+                            <span class="bg-cyber-purple/20 text-cyber-purple px-3 py-1 rounded-full text-sm font-medium">Editor Tools</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">2024</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 10: Programming Workspace -->
+                <div class="project-item cyber-card rounded-xl overflow-hidden" data-category="web" data-name="programming workspace">
+                    <div class="aspect-video bg-gradient-to-br from-cyber-green to-cyber-yellow relative overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/brocku.ca/90ff3159c4a38cbfbece128bdd8fca06755bca59.jpg" alt="Programming Workspace" class="w-full h-full object-cover"/>
+                        <div class="absolute inset-0 bg-cyber-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <button class="cyber-btn px-6 py-3 rounded-lg">DEVELOP</button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-orbitron font-bold text-xl mb-2 text-cyber-yellow">DEV WORKSPACE</h3>
+                        <p class="text-gray-300 mb-4">Integrated development environment for game creators with live collaboration</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-cyber-green/20 text-cyber-green px-3 py-1 rounded-full text-sm font-medium">Electron</span>
+                            <span class="bg-cyber-yellow/20 text-cyber-yellow px-3 py-1 rounded-full text-sm font-medium">Node.js</span>
+                            <span class="bg-cyber-cyan/20 text-cyber-cyan px-3 py-1 rounded-full text-sm font-medium">React</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">2024</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="text-cyber-cyan hover:text-cyber-yellow transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <!-- Load More Button -->
+            <div class="text-center mt-12">
+                <button id="load-more" class="cyber-btn px-8 py-4 rounded-lg font-orbitron font-bold text-lg">
+                    LOAD MORE PROJECTS
+                </button>
+            </div>
+        </div>
+    </section>
+
+   
+            
+            <div class="text-center mt-8 pt-8 border-t border-cyber-gray">
+                <p class="text-gray-400">
+                    © 2026 wiss very kewl rights to portfolio
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Projects page specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            initMobileMenu();
+            initProjectFilters();
+            initProjectSearch();
+            initLoadMore();
+        });
+
+        // Mobile Menu Toggle
+        function initMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+        }
+
+        // Project Filters
+        function initProjectFilters() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const projectItems = document.querySelectorAll('.project-item');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Update active button
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const filter = this.dataset.filter;
+                    
+                    // Filter projects with animation
+                    projectItems.forEach(item => {
+                        const shouldShow = filter === 'all' || item.dataset.category === filter;
+                        
+                        if (shouldShow) {
+                            // Show item with animation
+                            item.classList.remove('hidden');
+                            item.style.display = 'block';
+                            item.style.opacity = '0';
+                            item.style.transform = 'translateY(20px)';
+                            
+                            // Animate in
+                            setTimeout(() => {
+                                item.style.opacity = '1';
+                                item.style.transform = 'translateY(0)';
+                            }, 50);
+                        } else {
+                            // Hide item with animation
+                            item.style.opacity = '0';
+                            item.style.transform = 'translateY(-20px)';
+                            
+                            setTimeout(() => {
+                                item.classList.add('hidden');
+                                item.style.display = 'none';
+                            }, 300);
+                        }
+                    });
+                });
+            });
+        }
+
+        // Project Search
+        function initProjectSearch() {
+            const searchInput = document.getElementById('project-search');
+            const projectItems = document.querySelectorAll('.project-item');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                projectItems.forEach(item => {
+                    const projectName = item.dataset.name.toLowerCase();
+                    const projectTitle = item.querySelector('h3').textContent.toLowerCase();
+                    
+                    if (projectName.includes(searchTerm) || projectTitle.includes(searchTerm)) {
+                        item.classList.remove('hidden');
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+            });
+        }
+
+        // Load More Projects
+        function initLoadMore() {
+            const loadMoreBtn = document.getElementById('load-more');
+            
+            loadMoreBtn.addEventListener('click', function() {
+                // Simulate loading more projects
+                this.textContent = 'LOADING...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    this.textContent = 'ALL PROJECTS LOADED';
+                    this.classList.add('opacity-50', 'cursor-not-allowed');
+                }, 2000);
+            });
+        }
+
+        // Project Card Interactions
+        document.querySelectorAll('.project-item').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+                this.style.boxShadow = '0 20px 40px rgba(248, 230, 2, 0.3)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+                this.style.boxShadow = '0 0 20px rgba(248, 230, 2, 0.2)';
+            });
+        });
+    </script>
+
+</body></html>

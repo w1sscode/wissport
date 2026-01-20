@@ -1,0 +1,476 @@
+
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>About - Wiss Portfolio</title>
+    
+    <!-- Core Libraries -->
+    <script src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://s4.zstatic.net/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <script src="https://s4.zstatic.net/ajax/libs/echarts/5.4.0/echarts.min.js"></script>
+    <script src="https://s4.zstatic.net/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <link rel="stylesheet" href="https://s4.zstatic.net/npm/splitting@1.0.6/dist/splitting.css"/>
+    <script src="https://s4.zstatic.net/npm/splitting@1.0.6/dist/splitting.min.js"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.loli.net/css2?family=Orbitron:wght@400;700;900&amp;family=Rajdhani:wght@300;400;500;600;700&amp;family=Fira+Code:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cyber-yellow': '#F8E602',
+                        'cyber-cyan': '#00F0FF',
+                        'cyber-purple': '#772289',
+                        'cyber-orange': '#FF9A00',
+                        'cyber-pink': '#FF007A',
+                        'cyber-green': '#4BFF21',
+                        'cyber-white': '#F4D5FD',
+                        'cyber-black': '#0A0A0A',
+                        'cyber-gray': '#2C2C2E'
+                        
+                    },
+                    fontFamily: {
+                        'orbitron': ['Orbitron', 'sans-serif'],
+                        'rajdhani': ['Rajdhani', 'sans-serif'],
+                        'firacode': ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .cyber-bg {
+            background: linear-gradient(45deg, #636262 0%, #2C2C2E 50%, #0A0A0A 100%);
+            position: relative;
+        }
+        
+          .cyber-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://i.pinimg.com/originals/77/81/dd/7781dde14911b9440dc865b94aba0af1.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor;
+        }
+        
+        .cyber-card {
+            background: rgba(44, 44, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(248, 230, 2, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .cyber-card:hover {
+            border-color: rgba(248, 230, 2, 0.8);
+            box-shadow: 0 0 20px rgba(248, 230, 2, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .cyber-btn {
+            background: linear-gradient(45deg, #9af8aa, #48f3ac);
+            color: #03574b;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cyber-btn:hover {
+            box-shadow: 0 0 30px rgba(248, 230, 2, 0.6);
+            transform: scale(1.05);
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(45deg, #F8E602, #00F0FF);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(248, 230, 2, 0.5);
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 1.5rem;
+            width: 2px;
+            height: calc(100% - 1rem);
+            background: linear-gradient(180deg, #F8E602, transparent);
+        }
+        
+        .timeline-item:last-child::after {
+            display: none;
+        }
+        
+        .skill-category {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .skill-category:hover {
+            transform: scale(1.05);
+        }
+        
+        .skill-category.active {
+            background: linear-gradient(45deg, #F8E602, #00F0FF);
+            color: #0A0A0A;
+        }
+        
+        .interest-card {
+            background: rgba(44, 44, 46, 0.6);
+            border: 1px solid rgba(248, 230, 2, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .interest-card:hover {
+            border-color: rgba(248, 230, 2, 0.6);
+            box-shadow: 0 10px 30px rgba(248, 230, 2, 0.2);
+            transform: translateY(-5px);
+        }
+    </style>
+<script src="" defer=""></script></head>
+<body class="cyber-bg text-cyber-white font-rajdhani">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-cyber-black/80 backdrop-blur-md border-b border-cyber-yellow/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="">
+                        <span class="text-cyber-black font-bold text-sm"></span>
+                    </div>
+                    <span class="font-orbitron font-bold text-xl neon-text text-cyber-yellow"></span>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="text-cyber-white hover:text-cyber-yellow transition-colors duration-300">Home</a>
+                    <a href="rojects.html" class="text-cyber-white hover:text-cyber-yellow transition-colors duration-300">Projects</a>
+                    <a href="about.html" class="text-cyber-yellow font-semibold border-b-2 border-cyber-yellow pb-1">About</a>
+                    <a href="contact.html" class="text-cyber-white hover:text-cyber-yellow transition-colors duration-300">Contact</a>
+                </div>
+                
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-cyber-yellow">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-cyber-black/95 backdrop-blur-md">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 text-cyber-white hover:text-cyber-yellow transition-colors duration-300">Home</a>
+                <a href="rojects.html" class="block px-3 py-2 text-cyber-white hover:text-cyber-yellow transition-colors duration-300">Projects</a>
+                <a href="about.html" class="block px-3 py-2 text-cyber-yellow font-semibold">About</a>
+                <a href="contact.html" class="block px-3 py-2 text-cyber-white hover:text-cyber-yellow transition-colors duration-300">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-24 pb-12 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-30">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h1 class="font-orbitron font-black text-4xl md:text-6xl mb-6 n-text text-cyber-yellow">
+                        ABOUT ME
+                    </h1>
+                    
+                    <p class="text-xl mb-6 leading-relaxed">
+                        hi im wiss im 17 yr old game developer working on different projects and growing my skills
+                        i have over 3 yrs of experience and specialize in asset creation and architechture i have also done terrain stylization
+                        but i thinking making buildings is better for me my skills are not limited to only my portfolio but i dont really do anything
+                        else as well as i do game development                </p>
+                    <p class="text-lg mb-8 text-gray-300 leading-relaxed">
+                        My journey began with small projects and cashgrabs working with different groups until i actually started my journey at first by
+                        being a trainee dev for anime reborn where i met many great and talented developers then working for epic x until i started doing my own projects
+                        and exploring other platforms
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="contact.html" class="cyber-btn px-6 py-3 rounded-lg font-orbitron font-bold text-center">
+                            WORK WITH ME
+                        </a>
+                        <a href="index.html" class="border-2 border-cyber-yellow px-6 py-3 rounded-lg font-orbitron font-bold text-cyber-yellow hover:bg-cyber-yellow hover:text-cyber-black transition-all duration-300 text-center">
+                            VIEW SKILLS
+                        </a>
+                    </div>
+                </div>
+                 
+                <div class="flex justify-center">
+                    <div class="relative">
+                        <img src="https://media1.tenor.com/m/UWizjSPI1SYAAAAd/cyberpunk2077-david-martinez.gif" alt="" class=""/>
+                        <div class="">
+                            <svg class="w-8 h-8 text-cyber-black" fill="currentColor" viewBox="0 0 20 20">
+                                <path d=""></path>
+                            </svg>
+
+                       
+                            
+             
+                 
+                </div>
+            </div>
+        </div>
+    </section>
+
+        </div>
+    </section>
+
+    <!-- Experience Timeline -->
+    <section class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-orbitron font-bold text-3xl md:text-5xl mb-4 -text text-cyber-yellow">
+                    JOURNEY TIMELINE
+                </h2>
+                <div class=""></div>
+                <p class="text-xl max-w-3xl mx-auto">
+                    From Monkey to Human
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="space-y-12">
+                    <div class="timeline-item">
+                        <div class="cyber-card p-6 rounded-xl ml-8">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="font-orbitron font-bold text-xl text-cyber-yellow">experienced builder and intermidiate modeler</h3>
+                                <span class="text-cyber-cyan font-semibold">2025 - 2026</span>
+                            </div>
+                            <p class="text-gray-300 mb-3"> Studio - unity</p>
+                            <p class="text-sm text-gray-400 leading-relaxed">
+                               working wiht multiple groups and doing multiple comms do grow my experienc while also exploring opportunities off the 
+                               platform and learning other languages like c# for untiy and landing my self positions in different projects
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="cyber-card p-6 rounded-xl ml-8">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="font-orbitron font-bold text-xl text-cyber-yellow">builder - beginner modeler</h3>
+                                <span class="text-cyber-cyan font-semibold">2024 - 2025</span>
+                            </div>
+                            <p class="text-gray-300 mb-3">studio - unity</p>
+                            <p class="text-sm text-gray-400 leading-relaxed">
+                                 applying and trying to pass the bar to get in a s amodeler and builder for anime reborn
+                                where i also emt many talented devlopers includin phenomanal builder and modelers
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="cyber-card p-6 rounded-xl ml-8">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="font-orbitron font-bold text-xl text-cyber-yellow">mainly builder</h3>
+                                <span class="text-cyber-cyan font-semibold">2023 - 2024</span>
+                            </div>
+                            <p class="text-gray-300 mb-3">studio</p>
+                            <p class="text-sm text-gray-400 leading-relaxed">
+                                working on small games like rate ps99 and rate psx while growing my skills slowly
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="cyber-card p-6 rounded-xl ml-8">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="font-orbitron font-bold text-xl text-cyber-yellow">baby developer</h3>
+                                <span class="text-cyber-cyan font-semibold">2022 - 2023</span>
+                            </div>
+                            <p class="text-gray-300 mb-3">studio</p>
+                            <p class="text-sm text-gray-400 leading-relaxed">
+                              cashgrabs and simulators and me being intoduced to game development
+                              while also slowly understanding my profession
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Personal Interests -->
+    <section class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-orbitron font-bold text-3xl md:text-5xl mb-4 -text text-cyber-yellow">
+                    PERSONAL INTERESTS
+                </h2>
+                <div class=""></div>
+                <p class="text-xl max-w-3xl mx-auto">
+                    after work my only intrests are money / gaming / volley ball
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="interest-card p-6 rounded-xl">
+                    <div class="">
+                        <svg class="w-8 h-8 text-cyber-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-lg mb-2 text-cyber-yellow">Movie help</h3>
+                    <p class="text-gray-300 text-sm">
+                       familt too deep into acting and movies so i get dragged with them especially to plays 
+                       so there i also helpe set up the back ground and comment on different actors
+                    </p>
+                </div>
+                
+                <div class="interest-card p-6 rounded-xl">
+                    <div class="">
+                        <svg class="w-8 h-8 text-cyber-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path d=""></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-lg mb-2 text-cyber-yellow">Content Creation</h3>
+                    <p class="text-gray-300 text-sm">
+                    i dont do cc my self but i have freinds and and know ppl that do it full time so i sometimes help with editing and content suggestion
+                    </p>
+                </div>
+                
+                <div class="interest-card p-6 rounded-xl">
+                    <div class="">
+                        <svg class="w-8 h-8 text-cyber-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-lg mb-2 text-cyber-yellow">Art and Drawing</h3>
+                    <p class="text-gray-300 text-sm">
+                        its a skill and hobby i mostly use it to texture models and builds 
+                       but i also like to draw someimtes
+                    </p>
+                </div>
+                
+               
+    </section>
+
+    <!-- Footer -->
+ 
+
+    <script>
+        // About page specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            initMobileMenu();
+            initSkillCategories();
+            initScrollAnimations();
+        });
+
+        // Mobile Menu Toggle
+        function initMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+        }
+
+        // Skill Categories Interaction
+        function initSkillCategories() {
+            const skillCategories = document.querySelectorAll('.skill-category');
+            const skillContents = document.querySelectorAll('.skill-content');
+
+            skillCategories.forEach(category => {
+                category.addEventListener('click', function() {
+                    // Update active category
+                    skillCategories.forEach(cat => cat.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Show corresponding content
+                    const targetContent = this.dataset.category;
+                    skillContents.forEach(content => {
+                        if (content.dataset.content === targetContent) {
+                            content.classList.remove('hidden');
+                            content.classList.add('active');
+                        } else {
+                            content.classList.add('hidden');
+                            content.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        }
+
+        // Scroll Animations
+        function initScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in');
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe timeline items and interest cards
+            document.querySelectorAll('.timeline-item, .interest-card').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+            .animate-fade-in {
+                animation: fadeInUp 0.8s ease-out forwards;
+            }
+            
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .skill-content.active {
+                animation: fadeIn 0.5s ease-out;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+
+    
+
+</body></html>
